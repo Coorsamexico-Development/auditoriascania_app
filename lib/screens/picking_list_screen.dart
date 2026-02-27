@@ -43,14 +43,13 @@ class _PickingListScreenState extends State<PickingListScreen> {
   }
 
   Future<void> _takePhoto() async {
-    final result = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MultipleCameraScreen()),
+      MaterialPageRoute(
+        builder: (context) =>
+            MultipleCameraScreen(uploadProvider: _uploadProvider),
+      ),
     );
-
-    if (result != null && result is List<File> && result.isNotEmpty) {
-      _uploadProvider.addFiles(result);
-    }
   }
 
   Future<void> _scanOcr() async {

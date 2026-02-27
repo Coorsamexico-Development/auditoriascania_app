@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 
+import '../providers/picking_upload_provider.dart';
+
 class MultipleCameraScreen extends StatefulWidget {
-  const MultipleCameraScreen({super.key});
+  final PickingUploadProvider uploadProvider;
+
+  const MultipleCameraScreen({super.key, required this.uploadProvider});
 
   @override
   _MultipleCameraScreenState createState() => _MultipleCameraScreenState();
@@ -42,7 +46,7 @@ class _MultipleCameraScreenState extends State<MultipleCameraScreen> {
               children: [
                 IconButton(
                   icon: Icon(Icons.close, color: Colors.white, size: 30),
-                  onPressed: () => Navigator.pop(context, _capturedImages),
+                  onPressed: () => Navigator.pop(context),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -96,9 +100,12 @@ class _MultipleCameraScreenState extends State<MultipleCameraScreen> {
                       captureRequest.when(
                           single: (single) {
                             if (single.file != null) {
+                              final newFile = File(single.file!.path);
                               setState(() {
-                                _capturedImages.add(File(single.file!.path));
+                                _capturedImages.add(newFile);
                               });
+                              // Upload immediately
+                              widget.uploadProvider.addFiles([newFile]);
                             }
                           },
                           multiple: (multiple) {} // Not used for normal photo
@@ -125,7 +132,7 @@ class _MultipleCameraScreenState extends State<MultipleCameraScreen> {
                 // Finish button
                 AwesomeBouncingWidget(
                   onTap: () {
-                    Navigator.pop(context, _capturedImages);
+                    Navigator.pop(context);
                   },
                   child: Container(
                     padding: EdgeInsets.all(12),
