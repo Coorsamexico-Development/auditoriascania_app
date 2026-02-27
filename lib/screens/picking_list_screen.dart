@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../api_service.dart';
 import '../providers/picking_upload_provider.dart';
 import 'login_screen.dart';
+import 'multiple_camera_screen.dart';
 
 class PickingListScreen extends StatefulWidget {
   const PickingListScreen({super.key});
@@ -42,9 +43,13 @@ class _PickingListScreenState extends State<PickingListScreen> {
   }
 
   Future<void> _takePhoto() async {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    if (photo != null) {
-      _uploadProvider.addFiles([File(photo.path)]);
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MultipleCameraScreen()),
+    );
+
+    if (result != null && result is List<File> && result.isNotEmpty) {
+      _uploadProvider.addFiles(result);
     }
   }
 
