@@ -27,7 +27,8 @@ class ApiService {
     }
   }
 
-  static Future<int> createPickingList(String number) async {
+  static Future<int> createPickingList(
+      String number, List<int> temporaryEvidenceIds) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
@@ -37,7 +38,10 @@ class ApiService {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode({'number': number}),
+      body: jsonEncode({
+        'number': number,
+        'temporaryEvidenceIds': temporaryEvidenceIds,
+      }),
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
@@ -48,10 +52,7 @@ class ApiService {
     }
   }
 
-  static Future<void> uploadEvidences(
-    int pickingListId,
-    List<String> filePaths,
-  ) async {
+  static Future<int> uploadTemporaryEvidence(String filePath) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
@@ -60,15 +61,16 @@ class ApiService {
       Uri.parse('$baseUrl/evidences'),
     );
     request.headers['Authorization'] = 'Bearer $token';
-    request.fields['pickingListId'] = pickingListId.toString();
-
-    for (String path in filePaths) {
-      request.files.add(await http.MultipartFile.fromPath('files', path));
-    }
+    request.files.add(await http.MultipartFile.fromPath('file', filePath));
 
     var response = await request.send();
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception('Error al subir evidencias: ${response.statusCode}');
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final data = jsonDecode(responseBody);
+      return data['id'];
+    } else {
+      throw Exception(
+          'Error al subir evidencia temporal: ${response.statusCode}');
     }
   }
 
