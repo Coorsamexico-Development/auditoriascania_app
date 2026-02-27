@@ -164,180 +164,184 @@ class _PickingListScreenState extends State<PickingListScreen> {
               onPressed: _logout),
         ],
       ),
-      body: AnimatedBuilder(
-          animation: _uploadProvider,
-          builder: (context, child) {
-            return Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _numberController,
-                        decoration: InputDecoration(
-                          labelText: 'Número de Picking List',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.qr_code),
-                        ),
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(Icons.document_scanner,
-                          color: Colors.blue[800], size: 32),
-                      onPressed: _scanOcr,
-                      tooltip: 'Escanear OCR con Cámara',
-                    )
-                  ]),
-                  SizedBox(height: 24),
-                  Row(
-                    children: [
+      body: SafeArea(
+        child: AnimatedBuilder(
+            animation: _uploadProvider,
+            builder: (context, child) {
+              return Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(children: [
                       Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _pickImages,
-                          icon: Icon(Icons.photo_library),
-                          label: Text('Galería'),
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 12)),
+                        child: TextField(
+                          controller: _numberController,
+                          decoration: InputDecoration(
+                            labelText: 'Número de Picking List',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.qr_code),
+                          ),
+                          keyboardType: TextInputType.text,
                         ),
                       ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _takePhoto,
-                          icon: Icon(Icons.camera_alt),
-                          label: Text('Cámara'),
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 12)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(width: 8),
+                      IconButton(
+                        icon: Icon(Icons.document_scanner,
+                            color: Colors.blue[800], size: 32),
+                        onPressed: _scanOcr,
+                        tooltip: 'Escanear OCR con Cámara',
+                      )
+                    ]),
+                    SizedBox(height: 24),
+                    Row(
                       children: [
-                        Text(
-                            'Evidencias Adjuntas (${_uploadProvider.totalCount})',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        if (_uploadProvider.totalCount > 0)
-                          Text(
-                              'Subidas: ${_uploadProvider.uploadedCount}/${_uploadProvider.totalCount}',
-                              style: TextStyle(
-                                  color: _uploadProvider.uploadingCount > 0
-                                      ? Colors.orange
-                                      : Colors.green[700],
-                                  fontWeight: FontWeight.bold)),
-                      ]),
-                  if (_uploadProvider.uploadingCount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: LinearProgressIndicator(
-                        value: _uploadProvider.totalCount == 0
-                            ? null
-                            : _uploadProvider.uploadedCount /
-                                _uploadProvider.totalCount,
-                      ),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _pickImages,
+                            icon: Icon(Icons.photo_library),
+                            label: Text('Galería'),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 12)),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _takePhoto,
+                            icon: Icon(Icons.camera_alt),
+                            label: Text('Cámara'),
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 12)),
+                          ),
+                        ),
+                      ],
                     ),
-                  SizedBox(height: 8),
-                  Expanded(
-                    child: _uploadProvider.items.isEmpty
-                        ? Center(
-                            child: Text('Ninguna imagen seleccionada',
-                                style: TextStyle(color: Colors.grey)))
-                        : GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                            itemCount: _uploadProvider.items.length,
-                            itemBuilder: (context, index) {
-                              final item = _uploadProvider.items[index];
-                              return Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.file(item.file,
-                                        fit: BoxFit.cover),
-                                  ),
-                                  if (item.isUploading)
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black45,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                            color: Colors.white),
-                                      ),
+                    SizedBox(height: 16),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              'Evidencias Adjuntas (${_uploadProvider.totalCount})',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          if (_uploadProvider.totalCount > 0)
+                            Text(
+                                'Subidas: ${_uploadProvider.uploadedCount}/${_uploadProvider.totalCount}',
+                                style: TextStyle(
+                                    color: _uploadProvider.uploadingCount > 0
+                                        ? Colors.orange
+                                        : Colors.green[700],
+                                    fontWeight: FontWeight.bold)),
+                        ]),
+                    if (_uploadProvider.uploadingCount > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: LinearProgressIndicator(
+                          value: _uploadProvider.totalCount == 0
+                              ? null
+                              : _uploadProvider.uploadedCount /
+                                  _uploadProvider.totalCount,
+                        ),
+                      ),
+                    SizedBox(height: 8),
+                    Expanded(
+                      child: _uploadProvider.items.isEmpty
+                          ? Center(
+                              child: Text('Ninguna imagen seleccionada',
+                                  style: TextStyle(color: Colors.grey)))
+                          : GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+                              itemCount: _uploadProvider.items.length,
+                              itemBuilder: (context, index) {
+                                final item = _uploadProvider.items[index];
+                                return Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(item.file,
+                                          fit: BoxFit.cover),
                                     ),
-                                  if (item.hasError)
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black45,
-                                        borderRadius: BorderRadius.circular(8),
+                                    if (item.isUploading)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black45,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                              color: Colors.white),
+                                        ),
                                       ),
-                                      child: Center(
-                                        child: IconButton(
-                                          icon: Icon(Icons.refresh,
-                                              color: Colors.white, size: 36),
-                                          onPressed: () => _uploadProvider
-                                              .retryUpload(index),
+                                    if (item.hasError)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black45,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(Icons.refresh,
+                                                color: Colors.white, size: 36),
+                                            onPressed: () => _uploadProvider
+                                                .retryUpload(index),
+                                          ),
+                                        ),
+                                      ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            _uploadProvider.removeFile(index),
+                                        child: Container(
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle),
+                                          child: Icon(Icons.close,
+                                              color: Colors.white, size: 16),
                                         ),
                                       ),
                                     ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          _uploadProvider.removeFile(index),
-                                      child: Container(
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            shape: BoxShape.circle),
-                                        child: Icon(Icons.close,
-                                            color: Colors.white, size: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: (_uploadProvider.isSaving ||
-                            _uploadProvider.uploadingCount > 0)
-                        ? null
-                        : _submit,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.green[700],
-                      disabledBackgroundColor: Colors.grey[400],
-                      foregroundColor: Colors.white,
+                                  ],
+                                );
+                              },
+                            ),
                     ),
-                    child: _uploadProvider.isSaving
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                            _uploadProvider.uploadingCount > 0
-                                ? 'ESPERANDO SUBIDA...'
-                                : 'ENVIAR AUDITORÍA',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            );
-          }),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: (_uploadProvider.isSaving ||
+                              _uploadProvider.uploadingCount > 0)
+                          ? null
+                          : _submit,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.green[700],
+                        disabledBackgroundColor: Colors.grey[400],
+                        foregroundColor: Colors.white,
+                      ),
+                      child: _uploadProvider.isSaving
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              _uploadProvider.uploadingCount > 0
+                                  ? 'ESPERANDO SUBIDA...'
+                                  : 'ENVIAR AUDITORÍA',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 }
