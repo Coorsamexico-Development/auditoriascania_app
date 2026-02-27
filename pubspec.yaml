@@ -1,15 +1,16 @@
 name: app
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ^3.10.3
+  sdk: ^3.5.0
 
 dependencies:
-  file_picker: ^10.3.10
+  file_picker: ^8.1.7
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
   google_mlkit_text_recognition: ^0.15.1
   http: ^1.6.0
   image_picker: ^1.2.1
@@ -22,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env

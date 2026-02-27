@@ -1,11 +1,16 @@
 import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.180:3001';
+  static String get baseUrl => dotenv.env['API_URL'] ?? 'http://localhost:3001';
 
-  static Future<Map<String, dynamic>> login(String username, String password) async {
+  static Future<Map<String, dynamic>> login(
+    String username,
+    String password,
+  ) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json'},
@@ -43,11 +48,17 @@ class ApiService {
     }
   }
 
-  static Future<void> uploadEvidences(int pickingListId, List<String> filePaths) async {
+  static Future<void> uploadEvidences(
+    int pickingListId,
+    List<String> filePaths,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/evidences'));
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/evidences'),
+    );
     request.headers['Authorization'] = 'Bearer $token';
     request.fields['pickingListId'] = pickingListId.toString();
 
